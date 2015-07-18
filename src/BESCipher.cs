@@ -32,6 +32,10 @@ namespace BasylEncryptionStandard
             return generator;
         }
 
+        /// <summary>
+        /// Shuffles the arrays. This is mainly used to randomize the starting positions of the cipher.
+        /// </summary>
+        /// <param name="times"></param>
         public void Shuffle(int times)
         {
             byte b;
@@ -51,6 +55,10 @@ namespace BasylEncryptionStandard
             
         }
 
+
+        /// <summary>
+        /// Refreshes the secondary array.
+        /// </summary>
         private void RefreshOther()
         {
             for (int i = 0; i <= 255; i++)
@@ -61,7 +69,11 @@ namespace BasylEncryptionStandard
 
    
 
-
+        /// <summary>
+        /// Shuffles the position of bytes in the array.
+        /// This shuffles what is output-ed when you pass in a byte at that position.
+        /// </summary>
+        /// <param name="pos"></param>
         public void ShufflePosition(byte pos)
         {
             byte pos2 = generator.GetRandomByte();
@@ -80,6 +92,10 @@ namespace BasylEncryptionStandard
         }
 
       
+        /// <summary>
+        /// Encrypts "to the right", to reverse this, "encrypt" to the left.
+        /// </summary>
+        /// <param name="byt"></param>
         public void EncryptRight(ref byte byt)
         {
             byte pos = byt;
@@ -87,6 +103,10 @@ namespace BasylEncryptionStandard
             ShufflePosition(pos);
         }
 
+        /// <summary>
+        /// Encrypts "to the left", to reverse this, "encrypt" to the right.
+        /// </summary>
+        /// <param name="byt"></param>
         public void EncryptLeft(ref byte byt)
         {
            
@@ -97,6 +117,10 @@ namespace BasylEncryptionStandard
         }
 
 
+        /// <summary>
+        /// Encrypts "to the right", to reverse this, "encrypt" to the left.
+        /// </summary>
+        /// <param name="byt"></param>
         public void EncryptRight(ref byte[] byt)
         {
             for (int i = 0; i < byt.Length; i++)
@@ -106,6 +130,10 @@ namespace BasylEncryptionStandard
         }
 
 
+        /// <summary>
+        /// Encrypts "to the left", to reverse this, "encrypt" to the right.
+        /// </summary>
+        /// <param name="byt"></param>
         public void EncryptLeft(ref byte[] byt)
         {
             for(int i = 0; i < byt.Length; i++)
