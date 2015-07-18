@@ -6,18 +6,13 @@ namespace BasylEncryptionStandard
 {
     public class BasylFileEncryption
     {
+
         //Speed Settings
         private const int MAX_SPEED = 256 * 256 * 256;
         private const int MIN_SPEED = 256;
         //End Speed Settings
 
-        //Default Settings
-        private const int initial = 131072;
-        private const int rounds = 200;
-        private const int leftoff = 1200;
-        private const int expansion = 120;
-        private const string additionalKey = "ABCD";
-        //End Default Settings
+     
 
         //Delegate for telling percentages to a GUI.
         public delegate void Callback(double p);
@@ -31,7 +26,7 @@ namespace BasylEncryptionStandard
         {
             Decrypt(fileName, Path.GetFileNameWithoutExtension(fileName), pass);
         }
-
+        
         /// <summary>
         /// Provides an easy way of decrypting files.
         /// </summary>
@@ -40,7 +35,7 @@ namespace BasylEncryptionStandard
         /// <param name="pass">Password</param>
         public static void Decrypt(string fileName, string outputFile, string pass)
         {
-            Decrypt(File.OpenRead(fileName), File.Open(outputFile, FileMode.Create), pass, initial, rounds, leftoff, expansion, additionalKey);
+            Decrypt(File.OpenRead(fileName), File.Open(outputFile, FileMode.Create), pass, BasylKeyGenerator.INITIAL, BasylKeyGenerator.ROUNDS, BasylKeyGenerator.LEFTOFF, BasylKeyGenerator.EXPANSION, BasylKeyGenerator.ADDITIONALKEY);
         }
 
 
@@ -63,7 +58,7 @@ namespace BasylEncryptionStandard
         /// <param name="pass">Password</param>
         public static void Encrypt(string fileName, string outputFile, string pass)
         {
-            Encrypt(File.OpenRead(fileName), File.Open(outputFile, FileMode.Create), pass, initial, rounds, leftoff, expansion, additionalKey);
+            Encrypt(File.OpenRead(fileName), File.Open(outputFile, FileMode.Create), pass, BasylKeyGenerator.INITIAL, BasylKeyGenerator.ROUNDS, BasylKeyGenerator.LEFTOFF, BasylKeyGenerator.EXPANSION, BasylKeyGenerator.ADDITIONALKEY);
         }
 
         /// <summary>
@@ -101,7 +96,7 @@ namespace BasylEncryptionStandard
             Decrypt(File.OpenRead(input), File.OpenWrite(output), pass, initial, rounds, leftoff, expansion, additionalKey, callback);
 
         }
-
+    
         /// <summary>
         /// Decrypts a stream with the given configuration.
         /// Not for networking.
@@ -113,7 +108,7 @@ namespace BasylEncryptionStandard
         /// <param name="leftoff">Chunk of data left out</param>
         /// <param name="expansion">Multiplier for a key size. (Grows it).</param>
         /// <param name="additionalKey">Key to recycle</param>
-        public static void Decrypt(FileStream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey)
+        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey)
         {
             Decrypt(input, output, pass, initial, rounds, leftoff, expansion, additionalKey, null);
           
@@ -133,7 +128,7 @@ namespace BasylEncryptionStandard
         /// <param name="expansion"></param>
         /// <param name="additionalKey"></param>
         /// <param name="callback"></param>
-        public static void Decrypt(FileStream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
+        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
         {
             BinaryWriter writer = new BinaryWriter(output);
 
@@ -167,12 +162,13 @@ namespace BasylEncryptionStandard
             while (reader.GetStream().Position < reader.GetStream().Length)
             {
                 writer.Write(reader.ReadByte());
+                if (callback != null)
+                {
+                    callback((double)reader.GetStream().Position / reader.GetStream().Length);
+                }
+
             }
 
-            if (callback != null)
-            {
-                callback((double)reader.GetStream().Position / reader.GetStream().Length);
-            }
 
             writer.Close();
             reader.Close();
@@ -228,11 +224,10 @@ namespace BasylEncryptionStandard
         /// <param name="leftoff">Chunk of data left out</param>
         /// <param name="expansion">Multiplier for a key size. (Grows it).</param>
         /// <param name="additionalKey">Key to recycle</param>
-        public static void Encrypt(FileStream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey)
+        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey)
         {
             Encrypt(input, output, pass, initial, rounds, leftoff, expansion, additionalKey, null);
         }
-
 
         /// <summary>
         /// Encrypts a file stream with the given configuration.
@@ -247,7 +242,7 @@ namespace BasylEncryptionStandard
         /// <param name="expansion">Multiplier for a key size. (Grows it).</param>
         /// <param name="additionalKey">Key to recycle</param>
         /// <param name="callback">Callback method</param>
-        public static void Encrypt(FileStream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
+        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
         {
             BinaryReader reader = new BinaryReader(input);
 
@@ -293,5 +288,77 @@ namespace BasylEncryptionStandard
             reader.Close();
             reader.Dispose();
         }
+
+
+        /*
+        public void Encrypt(string fileName, IBasylKeyGenerator bkg)
+        {
+            Encrypt(fileName, fileName + ".bes", bkg);
+        }
+
+        public void Encrypt(string fileName, string outputFilename, IBasylKeyGenerator bkg)
+        {
+            Encrypt(fileName, outputFilename, bkg, null);
+        }
+
+        public void Encrypt(Stream file, Stream outputFile, IBasylKeyGenerator bkg)
+        {
+            Encrypt(file, outputFile, bkg, null);
+        }
+
+
+        public void Encrypt(string fileName, string outputFilename, IBasylKeyGenerator bkg, Callback callback)
+        {
+            Encrypt(File.OpenRead(fileName), File.OpenWrite(outputFilename), bkg, callback);
+        }
+
+
+        public void Encrypt(Stream input, Stream output, IBasylKeyGenerator bkg, Callback callback)
+        {
+            BinaryReader reader = new BinaryReader(input);
+
+            //The SHA guarantees that no two files will have the same key for encryption and decryption.
+            byte[] sha = SHA256.Create().ComputeHash(reader.BaseStream);
+            reader.BaseStream.Position = 0;
+
+            BasylWriter writer = new BasylWriter(output, bkg, true);
+
+            int speed = MAX_SPEED;
+            while (speed > MIN_SPEED)
+            {
+                //Encrypt Entire File in Chunks
+                while (reader.BaseStream.Position + speed < reader.BaseStream.Length)
+                {
+                    byte[] bytes = reader.ReadBytes(speed);
+                    writer.Write(bytes);
+
+                    if (callback != null)
+                    {
+                        callback((double)reader.BaseStream.Position / reader.BaseStream.Length);
+                    }
+
+                }
+                speed >>= 1;
+            }
+
+            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            {
+                writer.Write(reader.ReadByte());
+
+                if (callback != null)
+                {
+                    callback((double)reader.BaseStream.Position / reader.BaseStream.Length);
+                }
+
+            }
+            writer.Close();
+            writer.Dispose();
+            reader.Close();
+            reader.Dispose();
+        }
+
+
+        */
+
     }
 }
