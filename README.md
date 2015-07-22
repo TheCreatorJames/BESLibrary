@@ -25,11 +25,27 @@ BasylWriter writer = new BasylWriter(stream, bob, true);
 ```
 And there is a BasylReader.
 
-You could also encrypt directly with the Basyl Key Generators.
+You could also encrypt directly with the Basyl Key Generators. As it is XOR based, decrypting is the same as encrypting.
 
 ### Cipher BES
 To prevent any sort of tampering and remove any sort of derivable (indirect) XOR key, cipher bes was created. This has an internal shuffle cipher, similar in concept to the enigma machine. This is "more secure" than standard BES in the sense that it prevents a plaintext modification attack, but it prevents random access to the file. The file must be decrypted up to the point you are trying to access.
 
+Similar to standard BES,
 ```C#
-BasylCipherFileEncryption
+BasylCipherFileEncryption.Encrypt("HelloWorld.txt", "Hello");
 ```
+
+You could also encrypt using the BasylCipher directly.
+```C#
+BasylKeyGenerator bob = new BasylKeyGenerator("Password");
+BESCipher cipher = new BESCipher(bob);
+cipher.EncryptRight(bytes);
+```
+
+To decrypt, you must reconstruct the cipher with the same key generator,
+```C#
+cipher.EncryptLeft(bytes);
+```
+
+
+
