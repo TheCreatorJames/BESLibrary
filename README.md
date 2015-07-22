@@ -11,10 +11,21 @@ The original Basyl Encryption standard uses a key generator to XOR against your 
 
 However, if someone were to have intercepted a plain-text copy of your file, they could replace some of the text in the file. However, this would make the hash severely different.  
 
-
+Here is us using the file encryption utilities. There are different variants of this method possible.
 ```C#
-BasylFileEncryption
+BasylFileEncryption.Encrypt("HelloWorld.txt", "Hello");
 ```
+There are also decrypt methods available.
+
+
+Another way to encrypt is to use the BasylWriter, which can be constructed from a BasylKeyGenerator.
+```C#
+BasylKeyGenerator bob = new BasylKeyGenerator("Password");
+BasylWriter writer = new BasylWriter(stream, bob, true);
+```
+And there is a BasylReader.
+
+You could also encrypt directly with the Basyl Key Generators.
 
 ### Cipher BES
 To prevent any sort of tampering and remove any sort of derivable (indirect) XOR key, cipher bes was created. This has an internal shuffle cipher, similar in concept to the enigma machine. This is "more secure" than standard BES in the sense that it prevents a plaintext modification attack, but it prevents random access to the file. The file must be decrypted up to the point you are trying to access.
