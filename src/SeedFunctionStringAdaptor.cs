@@ -39,6 +39,7 @@ namespace BasylEncryptionStandard
             string result = "";
             if (operators == null)
             {
+                //add the operators and their priorities.
                 operators = new Dictionary<string, int>();
 
                 operators.Add("|", 5);
@@ -54,19 +55,22 @@ namespace BasylEncryptionStandard
                 operators.Add("-", 2);
             }
 
+            //provide spacing in between operators and possible literals/variables.
             foreach (String ops in operators.Keys)
             {
                 input = input.Replace(ops, " " + ops + " ");
             }
 
+            //same as the operators, but parenthesis.
             input = input.Replace("(", " ( ");
             input = input.Replace(")", " ) ");
-
-
+     
 
             Queue<String> operands = new Queue<string>();
             Queue<String> replacements = new Queue<string>();
             Stack<String> operats = new Stack<string>();
+
+            //find and parse everything in parenthesis.
             while (input.IndexOf("(") != -1)
             {
                 int pos = input.IndexOf("(");
@@ -105,9 +109,7 @@ namespace BasylEncryptionStandard
                         {
                             result += operands.Dequeue() + " ";
                         }
-
-
-
+                        
                         while (operats.Count != 0 && operators[operats.Peek()] >= operators[tok])
                         {
                             result += operats.Pop() + " ";
@@ -173,82 +175,95 @@ namespace BasylEncryptionStandard
 
             String[] tokens = ConvertToRPN(function).Split(' ');
 
+            //loop through every token
             foreach (String token in tokens)
             {
-                if (token.Length == 0) continue;
-                switch (token)
-                {
-                    case "+":
-                        nums.Push(nums.Pop() + nums.Pop());
-                        break;
-                    case "-":
-                        {
-                            var top = nums.Pop();
-                            var bottom = nums.Pop();
-                            nums.Push(bottom - top);
-                        }
-                        break;
-                    case "/":
-                        {
-                            var top = nums.Pop();
-                            var bottom = nums.Pop();
-                            nums.Push(bottom / top);
-                        }
-                        break;
-                    case "*":
-                        {
-                            var top = nums.Pop();
-                            var bottom = nums.Pop();
-                            nums.Push(bottom * top);
-                        }
-                        break;
-                    case "%":
-                        {
-                            var top = nums.Pop();
-                            var bottom = nums.Pop();
-                            nums.Push(bottom % top);
-                        }
-                        break;
-                    case "^":
-                        {
-                            var top = nums.Pop();
-                            var bottom = nums.Pop();
-                            nums.Push((ulong)Math.Pow(bottom, top));
-                        }
+                try {
+                    if (token.Length == 0) continue;
+                    switch (token)
+                    {
+                        case "+":
+                            nums.Push(nums.Pop() + nums.Pop());
+                            break;
+                        case "-":
+                            {
+                                var top = nums.Pop();
+                                var bottom = nums.Pop();
+                                nums.Push(bottom - top);
+                            }
+                            break;
+                        case "/":
+                            {
+                                var top = nums.Pop();
+                                var bottom = nums.Pop();
+                                nums.Push(bottom / top);
+                            }
+                            break;
+                        case "*":
+                            {
+                                var top = nums.Pop();
+                                var bottom = nums.Pop();
+                                nums.Push(bottom * top);
+                            }
+                            break;
+                        case "%":
+                            {
+                                var top = nums.Pop();
+                                var bottom = nums.Pop();
+                                nums.Push(bottom % top);
+                            }
+                            break;
+                        case "^":
+                            {
+                                var top = nums.Pop();
+                                var bottom = nums.Pop();
+                                nums.Push((ulong)Math.Pow(bottom, top));
+                            }
 
-                        break;
-                    case "pos":
-                        nums.Push(pos);
-                        break;
-                    case "seed":
-                        nums.Push(seed);
-                        break;
-                    case "|":
-                        {
-                            var top = nums.Pop();
-                            var bottom = nums.Pop();
-                            nums.Push(bottom | top);
-                        }
-                        break;
-                    case "&":
-                        {
-                            var top = nums.Pop();
-                            var bottom = nums.Pop();
-                            nums.Push(bottom & top);
-                        }
-                        break;
+                            break;
+                        case "pos":
+                            nums.Push(pos);
+                            break;
+                        case "seed":
+                            nums.Push(seed);
+                            break;
+                        case "|":
+                            {
+                                var top = nums.Pop();
+                                var bottom = nums.Pop();
+                                nums.Push(bottom | top);
+                            }
+                            break;
+                        case "&":
+                            {
+                                var top = nums.Pop();
+                                var bottom = nums.Pop();
+                                nums.Push(bottom & top);
+                            }
+                            break;
 
-                    case "":
-                        break;
-                    default:
-                        nums.Push(UInt64.Parse(token));
-                        break;
+                        case "":
+                            break;
+                        default:
+                            nums.Push(UInt64.Parse(token));
+                            break;
 
+                    }
+                } catch(Exception ex) { 
+                    //divided by zero error 
                 }
 
-
             }
+
+            //added this to add everything on the stack.
+            while (nums.Count > 1)
+            {
+                nums.Push(nums.Pop() + nums.Pop());
+            }
+
+            if(nums.Count == 1) //just in case.
             result = nums.Pop();
+            
             return result;
         }
     }
