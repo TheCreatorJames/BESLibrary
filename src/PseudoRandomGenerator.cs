@@ -18,6 +18,8 @@ namespace BasylEncryptionStandard
         private byte[] seedKey;
         private byte[] SHASeedKey;
 
+        private BasylPseudoAdaptator basylPseudoAdaptor;
+
         private Boolean stopRecycle;
         private int leftoff;
 
@@ -35,16 +37,21 @@ namespace BasylEncryptionStandard
         {
         }
 
-        public PseudoRandomGenerator(int size, string key, int rounds)
+        public PseudoRandomGenerator(int size, string key, int rounds) : this(size, key, rounds, new BasylPseudoAdaptator())
+        {
+            
+        }
+
+        public PseudoRandomGenerator(int size, string key, int rounds, BasylPseudoAdaptator basylPseudoAdaptor)
         {
             position = 0;
             this.rounds = rounds;
             Generation = new List<ulong>();
             this.recycleKey = "";
             ResizeBoth(size);
+            this.basylPseudoAdaptor = basylPseudoAdaptor;
             Generate(key);
         }
-
 
         /// <summary>
         /// Writes the PRNG to a file.
@@ -197,9 +204,11 @@ namespace BasylEncryptionStandard
             //Cipher it.
             for(int i = 0; i < rounds; i++)
             {
-                Cipher();
-                i++; //Just because.
-                CipherB(); 
+                basylPseudoAdaptor.Shuffle(Generation, rounds);
+                if (i % 2 == 0)
+                    Cipher();
+                else
+                    CipherB();
             }
 
       
@@ -265,7 +274,7 @@ namespace BasylEncryptionStandard
                 CipherB();
             }
 
-
+            basylPseudoAdaptor.Recycle(Generation);
             position = 0;
         }
         
@@ -381,10 +390,15 @@ namespace BasylEncryptionStandard
             Generation.Clear();
         }
 
-        //This should be swapped out. For different programs.
+        /// <summary>
+        /// This seeds the generation array.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="seed"></param>
+        /// <returns></returns>
         private ulong SeedFunction(ulong pos, ulong seed)
         {
-            return pos * pos + 2 * pos + pos * pos * pos + seed * pos + seed;
+            return basylPseudoAdaptor.SeedFunction(pos, seed);
         }
 
     }

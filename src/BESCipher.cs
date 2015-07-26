@@ -16,7 +16,7 @@ namespace BasylEncryptionStandard
         {
             cipher = new byte[256];
             cipherB = new byte[256];
-
+            
             for (int i = 0; i <= 255; i++)
             {
                 cipherB[i] = cipher[i] = (byte)i;

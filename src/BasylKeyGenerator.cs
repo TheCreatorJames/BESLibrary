@@ -38,7 +38,22 @@ namespace BasylEncryptionStandard
         {
         }
 
-
+        /// <summary>
+        /// This creates a Basyl Key Generator from the arguments..
+        /// </summary>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="sha"></param>
+        /// <param name="Key1Random"></param>
+        /// <param name="Key2Random"></param>
+        /// <param name="encryptedKey1"></param>
+        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, byte[] Key1Random, byte[] Key2Random, bool encryptedKey1) : this(pass, initial, rounds, leftoff, expansion, additionalKey, sha, Key1Random, Key2Random, encryptedKey1, null)
+        {
+        }
 
         /// <summary>
         /// This creates a Basyl Key Generator from the arguments..
@@ -53,13 +68,15 @@ namespace BasylEncryptionStandard
         /// <param name="Key1Random"></param>
         /// <param name="Key2Random"></param>
         /// <param name="encryptedKey1"></param>
-        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, byte[] Key1Random, byte[] Key2Random, bool encryptedKey1)
+        /// <param name="adaptor"></param>
+        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, byte[] Key1Random, byte[] Key2Random, bool encryptedKey1, BasylPseudoAdaptator adaptor)
         {
+            if (adaptor == null) adaptor = new BasylPseudoAdaptator();
             this.sha = sha;
             this.Key2Random = Key2Random;
             
-            PseudoRandomGenerator Key1 = new PseudoRandomGenerator(initial, pass, rounds);
-            Key2 = new PseudoRandomGenerator(1024 * 40, pass, 400);
+            PseudoRandomGenerator Key1 = new PseudoRandomGenerator(initial, pass, rounds, adaptor);
+            Key2 = new PseudoRandomGenerator(1024 * 40, pass, 400, adaptor);
 
             //Set the left off
             Key1.SetLeftoff(leftoff);
@@ -107,9 +124,10 @@ namespace BasylEncryptionStandard
 
         }
 
-         
+
         /// <summary>
         /// This is mainly used by the Basyl Writer.
+        /// Creates a Basyl Key Generator from the arguments.
         /// </summary>
         /// <param name="pass"></param>
         /// <param name="initial"></param>
@@ -118,12 +136,29 @@ namespace BasylEncryptionStandard
         /// <param name="expansion"></param>
         /// <param name="additionalKey"></param>
         /// <param name="sha"></param>
-        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha)
+        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha) : this(pass, initial, rounds, leftoff, expansion, additionalKey, sha, null)
         {
+        }
+
+        /// <summary>
+        /// This is mainly used by the Basyl Writer.
+        /// Creates a Basyl Key Generator from the arguments.
+        /// </summary>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="sha"></param>
+        ///<param name="adaptor"></param>
+        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, BasylPseudoAdaptator adaptor)
+        {
+            if (adaptor == null) adaptor = new BasylPseudoAdaptator();
             RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
 
-            PseudoRandomGenerator Key1 = new PseudoRandomGenerator(initial, pass, rounds);
-            Key2 = new PseudoRandomGenerator(1024 * 40, pass, 400);
+            PseudoRandomGenerator Key1 = new PseudoRandomGenerator(initial, pass, rounds, adaptor);
+            Key2 = new PseudoRandomGenerator(1024 * 40, pass, 400, adaptor);
 
             Key1Random = new byte[4];
             Key2Random = new byte[4];
