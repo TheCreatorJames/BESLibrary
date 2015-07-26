@@ -96,7 +96,26 @@ namespace BasylEncryptionStandard
             Decrypt(File.OpenRead(input), File.OpenWrite(output), pass, initial, rounds, leftoff, expansion, additionalKey, callback);
 
         }
-    
+
+        /// <summary>
+        /// Decrypts a stream with the given configuration.
+        /// Not for networking.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="adaptor"></param>
+        public static void Decrypt(String input, String output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
+        {
+            Decrypt(File.OpenRead(input), File.OpenWrite(output), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
+
+        }
+
         /// <summary>
         /// Decrypts a stream with the given configuration.
         /// Not for networking.
@@ -228,6 +247,24 @@ namespace BasylEncryptionStandard
         public static void Encrypt(String input, String output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
         {
             Encrypt(File.OpenRead(input), File.OpenWrite(output), pass, initial, rounds, leftoff, expansion, additionalKey, callback);
+        }
+
+        /// <summary>
+        /// Encrypts a file stream with the given configuration.
+        /// Not for networking.
+        /// </summary>
+        /// <param name="input">Input File String</param>
+        /// <param name="output">Output File String</param>
+        /// <param name="pass">Password</param>
+        /// <param name="initial">Initial Key Size</param>
+        /// <param name="rounds">Rounds of Key Generation</param>
+        /// <param name="leftoff">Chunk of data left out</param>
+        /// <param name="expansion">Multiplier for a key size. (Grows it).</param>
+        /// <param name="additionalKey">Key to recycle</param>
+        /// <param name="adaptor"></param>
+        public static void Encrypt(String input, String output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
+        {
+            Encrypt(File.OpenRead(input), File.OpenWrite(output), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
         }
 
         /// <summary>
