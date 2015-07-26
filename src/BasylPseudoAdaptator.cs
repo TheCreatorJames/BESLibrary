@@ -8,7 +8,7 @@ namespace BasylEncryptionStandard
 {
     /// <summary>
     /// This class allows you to modify the default behaviour of the PRNG class.
-    /// You should implement this class and override the methods, and use the appropriate PRNG constructor.
+    /// You should extend this class and override the methods, and use the appropriate PRNG constructor.
     /// </summary>
     public class BasylPseudoAdaptator
     {
