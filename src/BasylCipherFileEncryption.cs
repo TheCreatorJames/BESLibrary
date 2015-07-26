@@ -75,6 +75,23 @@ namespace BasylEncryptionStandard
             Encrypt(File.OpenRead(fileName), File.OpenWrite(outputFileName), pass, initial, rounds, leftoff, expansion, additionalKey, callback);
         }
 
+        /// <summary>
+        /// Encrypts a file with the parameters
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="outputFileName"></param>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="callback"></param>
+        /// <param name="adaptor"></param>
+        public static void Encrypt(string fileName, string outputFileName, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        {
+            Encrypt(File.OpenRead(fileName), File.OpenWrite(outputFileName), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
+        }
 
         /// <summary>
         /// Encrypts a file from the parameters.
@@ -90,10 +107,28 @@ namespace BasylEncryptionStandard
         /// <param name="callback"></param>
         public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback)
         {
+            Encrypt(input, output, pass, initial, rounds, leftoff, expansion, additionalKey, callback, null);
+        }
+
+        /// <summary>
+        /// Encrypts a file from the parameters.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="callback"></param>
+        /// <param name="adaptor"></param>
+        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        {
             //The SHA guarantees that no two files will have the same key for encryption and decryption.
             byte[] sha = SHA256.Create().ComputeHash(input);
             input.Position = 0;
-            BasylKeyGenerator bkg = new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, sha);
+            BasylKeyGenerator bkg = new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, sha, adaptor);
 
             //write out the necessary randomized info.
             output.Write(sha, 0, 32);
@@ -192,6 +227,23 @@ namespace BasylEncryptionStandard
             Decrypt(File.OpenRead(fileName), File.OpenWrite(outputFileName), pass, initial, rounds, leftoff, expansion, additionalKey, callback);
         }
 
+        /// <summary>
+        /// Decrypts a file with the parameters.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="outputFileName"></param>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="callback"></param>
+        /// <param name="adaptor"></param>
+        public static void Decrypt(string fileName, string outputFileName, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        {
+            Decrypt(File.OpenRead(fileName), File.OpenWrite(outputFileName), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
+        }
 
         /// <summary>
         /// Decrypts a file with the parameters.
@@ -207,6 +259,23 @@ namespace BasylEncryptionStandard
         /// <param name="callback"></param>
         public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback)
         {
+            Decrypt(input, output, pass, initial, rounds, leftoff, expansion, additionalKey, callback, null);
+        }
+
+        /// <summary>
+        /// Decrypts a file with the parameters.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="callback"></param>
+        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        {
            
             //read in the necessary randomized info.
        
@@ -218,7 +287,7 @@ namespace BasylEncryptionStandard
             input.Read(f2, 0, 4);
             input.Read(f, 0, 4);
 
-            BasylKeyGenerator bkg = new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, sha, f, f2, true);
+            BasylKeyGenerator bkg = new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, sha, f, f2, true, adaptor);
             BESCipher cipher = new BESCipher(bkg);
 
             int speed = MAX_SPEED;

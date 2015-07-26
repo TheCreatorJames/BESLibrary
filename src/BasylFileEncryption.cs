@@ -114,7 +114,6 @@ namespace BasylEncryptionStandard
           
         }
 
-
         /// <summary>
         /// Decrypts a stream with the given configuration.
         /// Not for networking.
@@ -130,6 +129,25 @@ namespace BasylEncryptionStandard
         /// <param name="callback"></param>
         public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
         {
+            Decrypt(input, output, pass, initial, rounds, leftoff, expansion, additionalKey, callback, null);
+        }
+
+        /// <summary>
+        /// Decrypts a stream with the given configuration.
+        /// Not for networking.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="callback"></param>
+        /// <param name="adaptor">Adaptor for PRNG</param>
+        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
+        {
             BinaryWriter writer = new BinaryWriter(output);
 
             byte[] hash = new byte[32];
@@ -138,7 +156,7 @@ namespace BasylEncryptionStandard
             input.Read(hash, 0, 32);
             input.Read(o, 0, 4);
             input.Read(d, 0, 4);
-            BasylReader reader = new BasylReader(input, new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, hash, d, o, true));
+            BasylReader reader = new BasylReader(input, new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, hash, d, o, true, adaptor));
 
             //Speeds up decryption by doing the decryption in chunks.
             int speed = MAX_SPEED;
@@ -233,6 +251,24 @@ namespace BasylEncryptionStandard
         /// Encrypts a file stream with the given configuration.
         /// Not for networking.
         /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        /// <param name="callback"></param>
+        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
+        {
+            Encrypt(input, output, pass, initial, rounds, leftoff, expansion, additionalKey, callback, null);
+        }
+
+        /// <summary>
+        /// Encrypts a file stream with the given configuration.
+        /// Not for networking.
+        /// </summary>
         /// <param name="input">Input Stream</param>
         /// <param name="output">Output Stream</param>
         /// <param name="pass">Password</param>
@@ -242,7 +278,8 @@ namespace BasylEncryptionStandard
         /// <param name="expansion">Multiplier for a key size. (Grows it).</param>
         /// <param name="additionalKey">Key to recycle</param>
         /// <param name="callback">Callback method</param>
-        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback)
+        /// <param name="adaptor">Adaptor for PRNG</param>
+        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
         {
             BinaryReader reader = new BinaryReader(input);
 
@@ -251,7 +288,7 @@ namespace BasylEncryptionStandard
             byte[] sha = SHA256.Create().ComputeHash(reader.BaseStream);
             reader.BaseStream.Position = 0;
 
-            BasylWriter writer = new BasylWriter(output, new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, sha), true);
+            BasylWriter writer = new BasylWriter(output, new BasylKeyGenerator(pass, initial, rounds, leftoff, expansion, additionalKey, sha, adaptor), true);
 
             int speed = MAX_SPEED;
             while (speed > MIN_SPEED)
