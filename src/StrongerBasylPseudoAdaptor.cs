@@ -10,7 +10,7 @@ namespace BasylEncryptionStandard
     /// This is an example of how you could vastly improve the encryption scheme with some simple 
     /// shuffling. This was inspired by the lightweight improvements to BESJS.
     /// </summary>
-    class StrongerBasylPseudoAdaptor : SeedFunctionStringAdaptor
+    public class StrongerBasylPseudoAdaptor : SeedFunctionStringAdaptor
     {
 
 

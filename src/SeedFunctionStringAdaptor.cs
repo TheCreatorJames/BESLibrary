@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace BasylEncryptionStandard
 {
+    /// <summary>
+    /// This allows you to pass in a string that will be treated as the seed string function.
+    /// Two possible variables are "seed" and "pos". You may also use literal values like "10". 
+    /// 
+    /// Examples of things that can be passed in: 
+    /// 10 + 20 + 30 * pos + seed * pos
+    /// 10 * pos * seed
+    /// etc.
+    /// </summary>
     public class SeedFunctionStringAdaptor : BasylPseudoAdaptator
     {
         private string function;
