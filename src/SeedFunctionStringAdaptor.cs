@@ -23,17 +23,30 @@ namespace BasylEncryptionStandard
             this.function = function;
         }
 
+        /// <summary>
+        /// Gets the function.
+        /// </summary>
+        /// <returns></returns>
         public String GetFunction()
         {
             return function;
         }
 
+        /// <summary>
+        /// Sets the function.
+        /// </summary>
+        /// <param name="function"></param>
         public void SetFunction(string function)
         {
             this.function = function;
         }
 
         private static Dictionary<String, Int32> operators;
+        /// <summary>
+        /// Converts infix input to reverse polish notation.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static String ConvertToRPN(string input)
         {
             string result = "";
@@ -164,11 +177,18 @@ namespace BasylEncryptionStandard
             return result.Replace('\t', ' ').Replace('\n', ' ').Replace("  ", " ");
         }
 
-
-
-
-
+        /// <summary>
+        /// Parses function and returns seed function
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="seed"></param>
+        /// <returns></returns>
         public override ulong SeedFunction(ulong pos, ulong seed)
+        {
+            return ParseSeedFunction(function, pos, seed);
+        }
+
+        public static ulong ParseSeedFunction(string function, ulong pos, ulong seed)
         {
             ulong result = 0;
             Stack<ulong> nums = new Stack<ulong>();
@@ -196,6 +216,7 @@ namespace BasylEncryptionStandard
                             {
                                 var top = nums.Pop();
                                 var bottom = nums.Pop();
+                                if (top == 0) top = 1;
                                 nums.Push(bottom / top);
                             }
                             break;
@@ -210,6 +231,7 @@ namespace BasylEncryptionStandard
                             {
                                 var top = nums.Pop();
                                 var bottom = nums.Pop();
+                                if (top == 0) top = 1;
                                 nums.Push(bottom % top);
                             }
                             break;
@@ -249,8 +271,9 @@ namespace BasylEncryptionStandard
                             break;
 
                     }
-                } catch(Exception ex) { 
+                } catch(Exception ex) {
                     //divided by zero error 
+                    nums.Push(1);
                 }
 
             }

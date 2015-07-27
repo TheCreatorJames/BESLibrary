@@ -43,12 +43,12 @@ namespace BasylEncryptionStandard
         public override void Shuffle(List<ulong> x, int round)
         {
 
-            if (round % 100 == 0)
+            if (round % 100 == 2)
             {
                 for (int i = 0; i < x.Count; i++)
                 {
                     var temporary = x[i];
-                    var otherPosition = Layers(x, x[i], ((temporary << 2) ^ (temporary >> 2)) % 16 + 1);
+                    var otherPosition = Layers(x, x[i], ((temporary << 2) ^ (temporary >> 2)) % 8 + 1);
                     OddSwap(x, i, otherPosition);
                 }
 
