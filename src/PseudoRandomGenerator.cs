@@ -154,6 +154,7 @@ namespace BasylEncryptionStandard
         /// <param name="times"></param>
         public void ExpandKey(uint times)
         {
+            if (times == 0) return; //This is a bug fix that I can no longer remove without compatibility issues );
             List<ulong> expander = new List<ulong>();
 
 
