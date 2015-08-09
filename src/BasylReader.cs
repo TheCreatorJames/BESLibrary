@@ -56,7 +56,9 @@ namespace BasylEncryptionStandard
         /// <returns></returns>
         public byte ReadByte()
         {
-            return (byte)((reader.ReadByte() ^ keyGen.GetRandomByte()));
+            byte readByte = reader.ReadByte();
+            keyGen.DecryptByte(ref readByte);
+            return readByte;
         }
 
         /// <summary>
@@ -122,8 +124,7 @@ namespace BasylEncryptionStandard
             byte[] bytes = reader.ReadBytes(num);
             for (int i = 0; i < num; i++)
             {
-                bytes[i] ^= keyGen.GetRandomByte();
-                
+                keyGen.DecryptByte(ref bytes[i]);
             }
 
             return bytes;

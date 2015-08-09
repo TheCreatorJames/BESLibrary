@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 namespace BasylEncryptionStandard
@@ -21,13 +22,29 @@ namespace BasylEncryptionStandard
 
         public static void Main(string[] args)
         {
-            var z = BasylHashAlgorithms.BasylHashUno("Hello World!", "Ugh", 32, 65535, 800, 193, "ABCD");
-            foreach(var n in z)
+            BasylKeyGenerator bkg = new BasylKeyGenerator("Hi", 1024, 900, 1240, 1024, "ABCD", new byte[(32)], new byte[(4)], new byte[(4)], false, new StrongerBasylPseudoAdaptor());
+
+            FileStream s = File.OpenWrite("Heh.dat");
+            int size = 1024*1024*25;
+            byte[] m = new byte[size];
+            while (true)
             {
-                Console.WriteLine(n);
+                bkg.FillBytes(m);
+                s.Write(m, 0, size);
+
+                for(int i = 0; i < size -1; i++)
+                {
+                    m[i] += m[i + 1];
+                }
+
+                for (int i = size - 2; i >= 0; i--)
+                {
+                    m[i] += m[i + 1];
+                }
+                s.Write(m, 0, size);
+
             }
 
-            
 
             Console.ReadLine();
         }

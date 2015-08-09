@@ -110,7 +110,7 @@ namespace BasylEncryptionStandard
         /// <param name="expansion"></param>
         /// <param name="additionalKey"></param>
         /// <param name="adaptor"></param>
-        public static void Decrypt(String input, String output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Decrypt(String input, String output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptor adaptor)
         {
             Decrypt(File.OpenRead(input), File.OpenWrite(output), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
 
@@ -165,7 +165,7 @@ namespace BasylEncryptionStandard
         /// <param name="additionalKey"></param>
         /// <param name="callback"></param>
         /// <param name="adaptor">Adaptor for PRNG</param>
-        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptor adaptor)
         {
             BinaryWriter writer = new BinaryWriter(output);
 
@@ -262,7 +262,7 @@ namespace BasylEncryptionStandard
         /// <param name="expansion">Multiplier for a key size. (Grows it).</param>
         /// <param name="additionalKey">Key to recycle</param>
         /// <param name="adaptor"></param>
-        public static void Encrypt(String input, String output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Encrypt(String input, String output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptor adaptor)
         {
             Encrypt(File.OpenRead(input), File.OpenWrite(output), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
         }
@@ -316,7 +316,7 @@ namespace BasylEncryptionStandard
         /// <param name="additionalKey">Key to recycle</param>
         /// <param name="callback">Callback method</param>
         /// <param name="adaptor">Adaptor for PRNG</param>
-        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, Callback callback, BasylPseudoAdaptor adaptor)
         {
             BinaryReader reader = new BinaryReader(input);
 

@@ -10,6 +10,16 @@ namespace BasylEncryptionStandard
         abstract public void Drop();
 
         /// <summary>
+        /// Allows you to specify how things encrypt and decrypt.
+        /// </summary>
+        /// <param name="byt"></param>
+        public virtual void DecryptByte(ref byte byt)
+        {
+            EncryptByte(ref byt);
+        }
+
+
+        /// <summary>
         /// Fills bytes.
         /// </summary>
         /// <param name="arr"></param>

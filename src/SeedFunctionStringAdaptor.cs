@@ -15,7 +15,7 @@ namespace BasylEncryptionStandard
     /// 10 * pos * seed
     /// etc.
     /// </summary>
-    public class SeedFunctionStringAdaptor : BasylPseudoAdaptator
+    public class SeedFunctionStringAdaptor : BasylPseudoAdaptor
     {
         private string function;
         public SeedFunctionStringAdaptor(string function)

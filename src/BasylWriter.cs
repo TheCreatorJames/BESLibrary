@@ -111,22 +111,22 @@ namespace BasylEncryptionStandard
         /// <param name="b"></param>
         public void Write(byte b)
         {
-            b ^= keyGen.GetRandomByte();
-            
+            keyGen.EncryptByte(ref b);
             writer.Write(b);
         }
 
 
         /// <summary>
         /// Writes an encrypted array of the bytes.
+        /// Uses the array in place, if you don't want this array
+        /// to be modified, you must create a copy to pass in.
         /// </summary>
         /// <param name="bytes">Array of Bytes that is encrypted.</param>
         public void Write(byte[] bytes)
         {
             for (int i = 0; i < bytes.Length; i++)
             {
-                bytes[i] ^= keyGen.GetRandomByte();
-               
+                keyGen.EncryptByte(ref bytes[i]);
             }
 
             writer.Write(bytes);

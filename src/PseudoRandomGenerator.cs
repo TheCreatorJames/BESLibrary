@@ -18,7 +18,7 @@ namespace BasylEncryptionStandard
         private byte[] seedKey;
         private byte[] SHASeedKey;
 
-        private BasylPseudoAdaptator basylPseudoAdaptor;
+        private BasylPseudoAdaptor basylPseudoAdaptor;
 
         private Boolean stopRecycle;
         private int leftoff;
@@ -37,12 +37,12 @@ namespace BasylEncryptionStandard
         {
         }
 
-        public PseudoRandomGenerator(int size, string key, int rounds) : this(size, key, rounds, new BasylPseudoAdaptator())
+        public PseudoRandomGenerator(int size, string key, int rounds) : this(size, key, rounds, new BasylPseudoAdaptor())
         {
             
         }
 
-        public PseudoRandomGenerator(int size, string key, int rounds, BasylPseudoAdaptator basylPseudoAdaptor)
+        public PseudoRandomGenerator(int size, string key, int rounds, BasylPseudoAdaptor basylPseudoAdaptor)
         {
             position = 0;
             this.rounds = rounds;
@@ -205,7 +205,7 @@ namespace BasylEncryptionStandard
             //Cipher it.
             for(int i = 0; i < rounds; i++)
             {
-                basylPseudoAdaptor.Shuffle(Generation, rounds);
+                basylPseudoAdaptor.Shuffle(Generation, i);
                 if (i % 2 == 0)
                     Cipher();
                 else

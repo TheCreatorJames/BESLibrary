@@ -69,9 +69,9 @@ namespace BasylEncryptionStandard
         /// <param name="Key2Random"></param>
         /// <param name="encryptedKey1"></param>
         /// <param name="adaptor"></param>
-        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, byte[] Key1Random, byte[] Key2Random, bool encryptedKey1, BasylPseudoAdaptator adaptor)
+        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, byte[] Key1Random, byte[] Key2Random, bool encryptedKey1, BasylPseudoAdaptor adaptor)
         {
-            if (adaptor == null) adaptor = new BasylPseudoAdaptator();
+            if (adaptor == null) adaptor = new BasylPseudoAdaptor();
             this.sha = sha;
             this.Key2Random = Key2Random;
             
@@ -141,6 +141,19 @@ namespace BasylEncryptionStandard
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pass"></param>
+        /// <param name="initial"></param>
+        /// <param name="rounds"></param>
+        /// <param name="leftoff"></param>
+        /// <param name="expansion"></param>
+        /// <param name="additionalKey"></param>
+        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey) : this(pass, initial, rounds, leftoff, expansion, additionalKey, GenerateRandomHash(), null)
+        {
+        }
+
+        /// <summary>
         /// This is mainly used by the Basyl Writer.
         /// Creates a Basyl Key Generator from the arguments.
         /// </summary>
@@ -152,9 +165,9 @@ namespace BasylEncryptionStandard
         /// <param name="additionalKey"></param>
         /// <param name="sha"></param>
         ///<param name="adaptor"></param>
-        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, BasylPseudoAdaptator adaptor)
+        public BasylKeyGenerator(string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, byte[] sha, BasylPseudoAdaptor adaptor)
         {
-            if (adaptor == null) adaptor = new BasylPseudoAdaptator();
+            if (adaptor == null) adaptor = new BasylPseudoAdaptor();
             RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
 
             PseudoRandomGenerator Key1 = new PseudoRandomGenerator(initial, pass, rounds, adaptor);

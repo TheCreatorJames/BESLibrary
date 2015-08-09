@@ -88,7 +88,7 @@ namespace BasylEncryptionStandard
         /// <param name="additionalKey"></param>
         /// <param name="callback"></param>
         /// <param name="adaptor"></param>
-        public static void Encrypt(string fileName, string outputFileName, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Encrypt(string fileName, string outputFileName, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptor adaptor)
         {
             Encrypt(File.OpenRead(fileName), File.OpenWrite(outputFileName), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
         }
@@ -123,7 +123,7 @@ namespace BasylEncryptionStandard
         /// <param name="additionalKey"></param>
         /// <param name="callback"></param>
         /// <param name="adaptor"></param>
-        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Encrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptor adaptor)
         {
             //The SHA guarantees that no two files will have the same key for encryption and decryption.
             byte[] sha = SHA256.Create().ComputeHash(input);
@@ -240,7 +240,7 @@ namespace BasylEncryptionStandard
         /// <param name="additionalKey"></param>
         /// <param name="callback"></param>
         /// <param name="adaptor"></param>
-        public static void Decrypt(string fileName, string outputFileName, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Decrypt(string fileName, string outputFileName, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptor adaptor)
         {
             Decrypt(File.OpenRead(fileName), File.OpenWrite(outputFileName), pass, initial, rounds, leftoff, expansion, additionalKey, callback, adaptor);
         }
@@ -274,7 +274,7 @@ namespace BasylEncryptionStandard
         /// <param name="expansion"></param>
         /// <param name="additionalKey"></param>
         /// <param name="callback"></param>
-        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptator adaptor)
+        public static void Decrypt(Stream input, Stream output, string pass, int initial, int rounds, int leftoff, int expansion, string additionalKey, BasylFileEncryption.Callback callback, BasylPseudoAdaptor adaptor)
         {
            
             //read in the necessary randomized info.
