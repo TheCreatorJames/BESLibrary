@@ -9,9 +9,9 @@ This library uses a secure pseudo-random number generator that has been tested a
 
 
 ### Standard BES
-The original Basyl Encryption standard uses a key generator to XOR against your file. This allows random access to your files. Since bruteforcing would require petabytes (or zettabytes and beyond depending on your password) of data to be computed each second to even crack it in a century, the strength is supposedly comparable to a One-Time Pad. An extra 40 bytes of salt is added as well, 32 bytes being a hash of the file you're encrypting, so that no two files (and even the same file) will encrypt the same way.
+The original Basyl Encryption standard uses a key generator to [XOR](https://en.wikipedia.org/wiki/Exclusive_or) against your file. The encryption scheme is modeled after the [One-Time Pad](https://en.wikipedia.org/wiki/One-time_pad), also known as the  [Vernam Cipher](https://en.wikipedia.org/wiki/One-time_pad). The advantage of this version of the encryption scheme is that it allows random access to your files. Bruteforcing files using this encryption scheme requires petabytes (or zettabytes and beyond depending on the length of your password) of data to be computed each second to even crack it in a century. To ensure that two files are never encrypted the same way, a 32 byte hash of the file is used to seed the generator. An additional 8 bytes guarantee even the same hash is never encrypted twice.
 
-However, if someone were to have intercepted a plain-text copy of your file, they could replace some of the text in the file. However, this would make the hash severely different.  
+This encryption scheme is slightly susceptible to a plaintext attack that allows them to replace some of the data in the file. However, because the hash of the original file is already included, this type of attack is easily prevented.
 
 Here is us using the file encryption utilities. There are different variants of this method possible.
 ```C#
@@ -42,7 +42,6 @@ To decrypt, using this key generator specifically, since it is XOR based, you co
 BasylKeyGenerator bob = new BasylKeyGenerator("Password", /* All the options factors */, hash, key1Random, key2Random, true);
 bob.DecryptByte(ref inputByte); //decrypts the byte.
 ```
-
 
 
 
