@@ -82,7 +82,7 @@ Well, mathematically, it is *impossible* to predict the data from the stream giv
 
 In order to predict the future of the stream, assuming that none of the data is left off (which is recommended by the algorithm), one would need to guess the original values of each slot in the generation array from the result of the modulo operation. Meaning each slot would have over **(2^56)**  possibilities. Each slot makes it exponentially harder to guess correctly. The number of possibilites grows beyong the scope of computation. 
 
-A bruteforce attack would be extremely computationally expensive, as this algorithm is designed to require a decent amount of RAM. A person would need to be able to compute zettabytes of data each second to crack recommended BES in a century. This is much harder to bruteforce than some other algorithms out there.
+A bruteforce attack would be extremely computationally expensive, as this PRNG is designed to require a generous amount of RAM. A person would need to be able to compute zettabytes of data each second to crack recommended form of BES in a century. This is much harder to bruteforce than some other algorithms out there.
 
 ---
 
