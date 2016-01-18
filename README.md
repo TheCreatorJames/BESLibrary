@@ -5,7 +5,7 @@ Your data belongs to you, or more accurately your user, and sometimes, you don't
 
 Also, check out this project's [sister written in C++](https://github.com/TheCreatorJames/BESLibraryCPP), or [in Java](https://github.com/TheCreatorJames/JBESLibrary).
 
-This library uses a secure pseudo-random number generator that has been tested against every suite available for public usage. This library provides both cryptographic primitives that you can use for your own encryption schemes, and built-in encryption schemes.
+This library uses a secure [pseudo-random number generator](https://github.com/TheCreatorJames/BESLibrary/blob/master/PRNG.md) that has been tested against every suite available for public usage. This library provides both cryptographic primitives that you can use for your own encryption schemes, and built-in encryption schemes.
 
 
 ### Standard BES
