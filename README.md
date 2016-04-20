@@ -1,7 +1,7 @@
 # BESLibrary
 
 ### Welcome
-Your data belongs to you, or more accurately your user, and sometimes, you don't want other people to see it. Encryption is the solution. This is a new encryption algorithm designed to be easy to modify, easy to implement, and easily portable. Unlike other forms of encryption, this algorithm can absorb as much entropy as you put into it. No more capped keysizes, this algorithm takes it all, and each encryption generation scheme is unique. 
+Your data belongs to you, and sometimes, you don't want other people to see it. Encryption is the solution. This is a new encryption algorithm designed to be easy to modify, easy to implement, and easily portable. Unlike other forms of encryption, this algorithm can absorb as much entropy as you put into it. No more capped keysizes, this algorithm takes it all, and each encryption generation scheme is unique. 
 
 Also, check out this project's [sister written in C++](https://github.com/TheCreatorJames/BESLibraryCPP), or [in Java](https://github.com/TheCreatorJames/JBESLibrary).
 
@@ -71,3 +71,5 @@ Try checking out this project here:
 https://github.com/TheCreatorJames/BasylEncryptionTool
 
 
+### Why choose this over AES? 
+The truth is, you don't need to. AES is heavily standardized and is much faster than this algorithm. Even though BES can encrypt files much stronger than AES, and can scale upwards in strength, it is very unlikely that we will reach a point in our lifetimes where even AES-128 can be cracked. This project was created for academic purposes, and taught me quite a bit about strong pseudo-random number generation. 
