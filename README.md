@@ -1,17 +1,19 @@
 # BESLibrary
 
-### Welcome
-Your data belongs to you, and sometimes, you don't want other people to see it. Encryption is the solution. This is a new encryption algorithm designed to be easy to modify, easy to implement, and easily portable. Unlike other forms of encryption, this algorithm can absorb as much entropy as you put into it. No more capped keysizes, this algorithm takes it all, and each encryption generation scheme is unique. 
+This was an encryption library I created as a Senior in High School (back in 2015). 
 
-Also, check out this project's [sister written in C++](https://github.com/TheCreatorJames/BESLibraryCPP), or [in Java](https://github.com/TheCreatorJames/JBESLibrary).
+It taught me quite a bit about cryptography, and while components of the algorithm still hold up, I would **highly discourage** its use in production, or even for academic study. 
 
-This library uses a secure [pseudo-random number generator](https://github.com/TheCreatorJames/BESLibrary/blob/master/PRNG.md) that has been tested against every suite available for public usage. This library provides both cryptographic primitives that you can use for your own encryption schemes, and built-in encryption schemes.
+The encryption scheme itself implements elements of key stretching, and is designed to be "memory-hard" rather than CPU intensive. 
+
+You might want to check out this project's [sister written in C++](https://github.com/TotalTechGeek/BESLibraryCPP), or [in Java](https://github.com/TheCreatorJames/JBESLibrary).
+
+This library uses a custom [pseudo-random number generator](https://github.com/TotalTechGeek/BESLibrary/blob/master/PRNG.md) that has been tested against every suite available for public usage. This library provides both cryptographic primitives that you can use for your own encryption schemes, and built-in encryption schemes.
 
 
 ### Standard BES
-The original Basyl Encryption standard uses a key generator to [XOR](https://en.wikipedia.org/wiki/Exclusive_or) against your file. The encryption scheme is modeled after the [One-Time Pad](https://en.wikipedia.org/wiki/One-time_pad), also known as the  [Vernam Cipher](https://en.wikipedia.org/wiki/One-time_pad). The advantage of this version of the encryption scheme is that it allows random access to your files. Bruteforcing files using this encryption scheme requires petabytes (or zettabytes and beyond depending on the length of your password) of data to be computed each second to even crack it in a century. To ensure that two files are never encrypted the same way, a 32 byte hash of the file is used to seed the generator. An additional 8 bytes guarantee even the same hash is never encrypted twice.
 
-This encryption scheme is slightly susceptible to a plaintext attack that allows them to replace some of the data in the file. However, because the hash of the original file is already included, this type of attack is easily prevented.
+This encryption scheme uses a simple XOR operation between the plaintext and CSPRNG to produce encrypted output. One of its drawbacks is that it is plaintext malleable, but this risk is mitigated by the use of a hash as an initialization vector. 
 
 Here is us using the file encryption utilities. There are different variants of this method possible.
 ```C#
@@ -46,7 +48,7 @@ bob.DecryptByte(ref inputByte); //decrypts the byte.
 
 
 ### Cipher BES
-To prevent any sort of tampering and remove any sort of derivable (indirect) XOR key, cipher bes was created. This has an internal shuffle cipher, similar in concept to the enigma machine. This is "more secure" than standard BES in the sense that it prevents a plaintext modification attack, but it prevents random access to the file. The file must be decrypted up to the point you are trying to access.
+To prevent any sort of tampering and increase error propagation (intentionally), cipher bes was created. This has an internal shuffle cipher, similar in concept to the enigma machine. This is "more secure" than standard BES in the sense that it prevents a plaintext modification attack, but it prevents random access to the file. The file must be decrypted up to the point you are trying to access.
 
 Similar to standard BES,
 ```C#
@@ -65,11 +67,7 @@ To decrypt, you must reconstruct the cipher with the same key generator,
 cipher.EncryptLeft(bytes);
 ```
 
-
-### Example Tool
-Try checking out this project here: 
-https://github.com/TheCreatorJames/BasylEncryptionTool
-
-
 ### Why choose this over AES? 
-The truth is, you don't need to. AES is heavily standardized and is much faster than this algorithm. Even though BES can encrypt files much stronger than AES, and can scale upwards in strength, it is very unlikely that we will reach a point in our lifetimes where even AES-128 can be cracked. This project was created for academic purposes, and taught me quite a bit about strong pseudo-random number generation. 
+You shouldn't. 
+
+This project was created for academic purposes, and taught me quite a bit about strong pseudo-random number generation. 
